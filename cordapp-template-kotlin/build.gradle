@@ -69,6 +69,8 @@ apply plugin: 'net.corda.plugins.cordapp'
 apply plugin: 'net.corda.plugins.cordformation'
 apply plugin: 'net.corda.plugins.quasar-utils'
 
+
+
 sourceSets {
     main {
         resources {
@@ -98,6 +100,7 @@ dependencies {
     cordapp "$tokens_release_group:tokens-contracts:$tokens_release_version"
     cordapp "$tokens_release_group:tokens-workflows:$tokens_release_version"
     cordapp "$tokens_release_group:tokens-money:$tokens_release_version"
+
 }
 
 task deployNodes(type: net.corda.plugins.Cordform, dependsOn: ['jar']) {
@@ -122,16 +125,23 @@ task deployNodes(type: net.corda.plugins.Cordform, dependsOn: ['jar']) {
         cordapps = []
     }
     node {
-        name "O=PartyA,L=London,C=GB"
+        name "O=Airplane,L=London,C=GB"
         p2pPort 10005
         rpcSettings {
             address("localhost:10006")
             adminAddress("localhost:10046")
         }
         rpcUsers = [[ user: "user1", "password": "test", "permissions": ["ALL"]]]
+        extraConfig = [
+                'dataSourceProperties.dataSource.url' : 'jdbc:postgresql://localhost:5432/yeahh',
+                'dataSourceProperties.dataSourceClassName' : 'org.postgresql.ds.PGSimpleDataSource',
+                'dataSourceProperties.dataSource.user' : 'postgres',
+                'dataSourceProperties.dataSource.password' : 'root',
+                'jarDirs' : [ 'E' ]
+        ]
     }
     node {
-        name "O=PartyB,L=New York,C=US"
+        name "O=Aerotrax,L=New York,C=US"
         p2pPort 10008
         rpcSettings {
             address("localhost:10009")
