@@ -1,9 +1,12 @@
 package com.flowdb
 
 
+import com.template.flows.DB_AEROTRAX
+import com.template.flows.DB_AIRPLANE
 import com.template.flows.SPECS_TABLE
 import com.template.flows.TABLE_NAME
 import net.corda.core.contracts.UniqueIdentifier
+import net.corda.core.identity.Party
 import net.corda.core.node.ServiceHub
 import net.corda.core.node.services.CordaService
 import java.time.Instant
@@ -18,6 +21,8 @@ class CryptoValuesDatabaseService(services: ServiceHub) : DatabaseService(servic
     init {
         setUpStorage()
         setUpSpecification()
+//        SetUpAerotraxDB()
+
     }
 
     /**
@@ -38,8 +43,7 @@ class CryptoValuesDatabaseService(services: ServiceHub) : DatabaseService(servic
         val query = "insert into $TABLE_NAME values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
 
         val params = mapOf(1 to partType, 2 to partName, 3 to partNumber, 4 to serialNumber, 5 to manufacturer,
-                            6 to price, 7 to status, 8 to issuer, 9 to date2String, 10 to sender2String, 11 to receiver2String
-                           )
+                            6 to price, 7 to status, 8 to issuer, 9 to date2String, 10 to sender2String, 11 to receiver2String)
 
         executeUpdate(query, params)
         log.info("Part number $partNumber added to airplane_parts table.")
@@ -61,6 +65,13 @@ class CryptoValuesDatabaseService(services: ServiceHub) : DatabaseService(servic
         executeUpdate(query, params)
         log.info("Specification $specificationTitle added to specification table.")
     }
+
+//    fun SetUpAerotraxDB(node: String) {
+//        if (node == "Airplane")
+//        { val query = "create database $DB_AEROTRAX with template $DB_AIRPLANE"
+//
+//        }
+//    }
 
     /**
      * Updates the value of a crypto token in the table of crypto values.

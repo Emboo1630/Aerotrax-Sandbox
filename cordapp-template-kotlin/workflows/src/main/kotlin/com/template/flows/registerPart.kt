@@ -19,6 +19,8 @@ import java.time.Instant
 
 const val TABLE_NAME = "airplane_parts"
 const val SPECS_TABLE = "specifications"
+const val DB_AEROTRAX = "Aerotrax"
+const val DB_AIRPLANE = "Airplane"
 
 @InitiatingFlow
 @StartableByRPC
@@ -30,10 +32,8 @@ class registerPart(private val partType : String,
                    private val price : Int,
                    private val status : String,
                    private val issuer : String,
-                   private val specificationNumber : String = mutableListOf<SpecificationsState>().map { it.specificationNumber }.single(),
-                   private val specificationTitle : String = mutableListOf<SpecificationsState>().map { it.specificationTitle }.single(),
-                   private val specificationUnit : String = mutableListOf<SpecificationsState>().map { it.specificationUnit }.single()
-//                           mutableListOf(SpecificationsState(serialNumber,specificationNumber = "",specificationTitle = "", specificationUnit = ""))
+                   private val listOfSpecificationsState: MutableList<SpecificationsState>
+
 ): FlowFunction() {
     override val progressTracker = ProgressTracker(INITIALIZING, BUILDING, SIGNING, COLLECTING, FINALIZING)
 
@@ -46,9 +46,20 @@ class registerPart(private val partType : String,
         val sender2String = from.toString()
         val to = outputState().receiver
         val receiver2String = to.toString()
+//        val node = outputState().sender
+//        val node2String = node.toString()
         val databaseService = serviceHub.cordaService(CryptoValuesDatabaseService::class.java)
         databaseService.registerPart(partType, partName, partNumber, serialNumber, manufacturer, price, status, issuer, date2String, sender2String, receiver2String)
-        databaseService.addSpecs(serialNumber, specificationNumber, specificationTitle, specificationUnit)
+//        databaseService.SetUpAerotraxDB(node2String)
+
+
+
+        for (i in listOfSpecificationsState) {
+            i.specificationNumber
+            i.specificationTitle
+            i.specificationUnit
+            databaseService.addSpecs(serialNumber, i.specificationNumber, i.specificationTitle, i.specificationUnit )
+        }
 
         val transaction: TransactionBuilder = transaction()
         val signedTransaction: SignedTransaction = verifyAndSign(transaction)
@@ -74,7 +85,7 @@ class registerPart(private val partType : String,
                  sender = ourIdentity,
                  receiver = aerotrax,
                 linearId = UniqueIdentifier(),
-                listOfSpecifications = mutableListOf(SpecificationsState(serialNumber, specificationTitle, specificationNumber, specificationUnit))
+                listOfSpecifications = listOfSpecificationsState
         )
     }
 
