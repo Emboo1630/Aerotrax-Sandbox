@@ -19,7 +19,7 @@ data class airplaneState (
                           var price: Int,
                           val status: String,
                           val issuer : String,
-                          val listOfSpecifications: SpecificationsState,
+                          val listOfSpecifications: MutableList<SpecificationsState>,
                           val dateAdded: Instant = Instant.now(),
                           val sender: Party,
                           val receiver: Party,

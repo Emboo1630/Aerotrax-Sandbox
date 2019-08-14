@@ -1,10 +1,10 @@
-2019-08-14 11:19:57,719 main WARN Unable to instantiate org.fusesource.jansi.WindowsAnsiOutputStream
-2019-08-14 11:19:57,722 main WARN Unable to instantiate org.fusesource.jansi.WindowsAnsiOutputStream
+2019-08-14 14:28:51,221 main WARN Unable to instantiate org.fusesource.jansi.WindowsAnsiOutputStream
+2019-08-14 14:28:51,224 main WARN Unable to instantiate org.fusesource.jansi.WindowsAnsiOutputStream
 
    ______               __
   / ____/     _________/ /___ _
- / /     __  / ___/ __  / __ `/         If at first you don't succeed, destroy
-/ /___  /_/ / /  / /_/ / /_/ /          all the evidence that you tried.
+ / /     __  / ___/ __  / __ `/         Cats spend two thirds of their lives sleeping
+/ /___  /_/ / /  / /_/ / /_/ /          and the other third making viral videos.
 \____/     /_/   \__,_/\__,_/
 
 --- Corda Open Source 4.1 (c11f6c1) -------------------------------------------------------------

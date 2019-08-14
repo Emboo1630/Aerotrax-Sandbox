@@ -9,7 +9,7 @@ import net.corda.core.transactions.SignedTransaction
 import net.corda.core.transactions.TransactionBuilder
 import com.template.flow.*
 import com.template.states.SpecificationsState
-//import com.template.states.SpecificationsState
+
 import com.template.states.airplaneState
 import net.corda.core.contracts.UniqueIdentifier
 import net.corda.core.contracts.requireThat
@@ -29,8 +29,12 @@ class registerPart(private val partType : String,
                    private val manufacturer : String,
                    private val price : Int,
                    private val status : String,
-                   private val issuer : String
-                  ): FlowFunction() {
+                   private val issuer : String,
+                   private val specificationNumber : String = mutableListOf<SpecificationsState>().map { it.specificationNumber }.single(),
+                   private val specificationTitle : String = mutableListOf<SpecificationsState>().map { it.specificationTitle }.single(),
+                   private val specificationUnit : String = mutableListOf<SpecificationsState>().map { it.specificationUnit }.single()
+//                           mutableListOf(SpecificationsState(serialNumber,specificationNumber = "",specificationTitle = "", specificationUnit = ""))
+): FlowFunction() {
     override val progressTracker = ProgressTracker(INITIALIZING, BUILDING, SIGNING, COLLECTING, FINALIZING)
 
     @Suspendable
@@ -42,11 +46,10 @@ class registerPart(private val partType : String,
         val sender2String = from.toString()
         val to = outputState().receiver
         val receiver2String = to.toString()
-
-
         val databaseService = serviceHub.cordaService(CryptoValuesDatabaseService::class.java)
         databaseService.registerPart(partType, partName, partNumber, serialNumber, manufacturer, price, status, issuer, date2String, sender2String, receiver2String)
-        databaseService.addSpecs(outputState().listOfSpecifications.serialNumber, outputState().listOfSpecifications.specificationTitle,outputState().listOfSpecifications.specificationNumber, outputState().listOfSpecifications.specificationUnit )
+        databaseService.addSpecs(serialNumber, specificationNumber, specificationTitle, specificationUnit)
+
         val transaction: TransactionBuilder = transaction()
         val signedTransaction: SignedTransaction = verifyAndSign(transaction)
         val aerotrax = stringToPartySpy("Aerotrax")
@@ -71,7 +74,7 @@ class registerPart(private val partType : String,
                  sender = ourIdentity,
                  receiver = aerotrax,
                 linearId = UniqueIdentifier(),
-                listOfSpecifications =SpecificationsState(serialNumber = serialNumber, specificationTitle = "", specificationNumber = "", specificationUnit = "")
+                listOfSpecifications = mutableListOf(SpecificationsState(serialNumber, specificationTitle, specificationNumber, specificationUnit))
         )
     }
 
